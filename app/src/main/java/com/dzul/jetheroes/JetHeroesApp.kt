@@ -26,7 +26,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.dzul.jetheroes.data.HeroRepository
 import com.dzul.jetheroes.model.HeroesData
 import com.dzul.jetheroes.ui.theme.JetHeroesTheme
 import kotlinx.coroutines.launch
@@ -35,12 +37,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun JetHeroesApp(
     modifier: Modifier = Modifier,
+    viewModel: JetHeroesViewModel = viewModel(factory = ViewModelFactory(HeroRepository()))
 ) {
 
-    //variabel untuk mensortir data berdasarkan inisial(huruf awal)
-    val groupedHeroes = HeroesData.heroes
-        .sortedBy { it.name }
-        .groupBy { it.name[0] }
+    val groupedHeroes by viewModel.groupedHeroes.collectAsState()
+    //collect asState berfungsi untuk mengubah stateflow menjadi state
 
     Box(modifier = modifier) {
 
